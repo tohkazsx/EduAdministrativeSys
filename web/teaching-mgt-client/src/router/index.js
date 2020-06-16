@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/login'
 import Main from '@/components/main'
-import Register from '@/components/register';
+import ResetPass from '@/components/reset_pass';
 
 Vue.use(Router)
 
@@ -23,10 +23,10 @@ export default new Router({
       name: 'main',
       component: Main
     },
-     {
-       path: '/register',
-       name: 'register',
-       component: Register
-     }
+    {
+      path: '/reset_pass',
+      name: 'reset_pass',
+      component: ResetPass
+    }
   ]
 })

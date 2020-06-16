@@ -13,7 +13,7 @@
             size="large"
             v-decorator="[
           'username',
-          { rules: [{ required: true, message: 'Please input your username!' }] },
+          { rules: [{ required: true, message: '请输入用户名！' }] },
         ]"
             placeholder="用户名"
           >
@@ -28,7 +28,7 @@
             size="large"
             v-decorator="[
           'password',
-          { rules: [{ required: true, message: 'Please input your Password!' }] },
+          { rules: [{ required: true, message: '请输入密码！' }] },
         ]"
             type="password"
             placeholder="密码"
@@ -38,19 +38,13 @@
         </a-form-item>
         <a-form-item>
           <a-row>
-            <a-col :span="4" offset="4">
+            <a-col :span="4" offset="10">
               <a-button
                 size="large"
                 type="primary"
                 html-type="submit"
                 :disabled="hasErrors(form.getFieldsError())"
               >登录</a-button>
-            </a-col>
-
-            <a-col :span="4" offset="8">
-              <a-button type="primary" size="large" html-type="submit">
-                <router-link to="/register">注册</router-link>
-              </a-button>
             </a-col>
           </a-row>
         </a-form-item>
@@ -59,20 +53,17 @@
   </a-row>
 </template>
 
-
-
 <script>
 import { Modal } from "ant-design-vue";
 // import axios from "axios";
 import md5 from "js-md5";
 
-function hasErrors(fieldsError) {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
-}
 export default {
   data() {
     return {
-      hasErrors,
+      hasErrors: function(fieldsError) {
+        return Object.keys(fieldsError).some(field => fieldsError[field]);
+      },
       form: this.$form.createForm(this, { name: "horizontal_login" })
     };
   },
@@ -85,53 +76,76 @@ export default {
   methods: {
     // Only show error after a field is touched.
     userNameError() {
-      const { getFieldError, isFieldTouched } = this.form;
-      return isFieldTouched("userName") && getFieldError("userName");
+      // 解构赋值: 创建 getFieldError 变量, 将this.form.getFieldError赋值给它
+      const { getFieldError, isFieldTouched, getFieldValue } = this.form;
+      return (
+        isFieldTouched("username") &&
+        (getFieldError("username") ||
+          this.handleUsername(getFieldValue("username")))
+      );
     },
     // Only show error after a field is touched.
     passwordError() {
-      const { getFieldError, isFieldTouched } = this.form;
-      return isFieldTouched("password") && getFieldError("password");
+      const { getFieldError, isFieldTouched, getFieldValue } = this.form;
+      return (
+        isFieldTouched("password") &&
+        (getFieldError("password") ||
+          this.handlePassword(getFieldValue("password")))
+      );
+    },
+    handleUsername(username) {
+      let pattern = new RegExp("^\\d{7}$");
+      return pattern.test(username) ? "" : "用户名必须为7位数字";
+    },
+    handlePassword(password) {
+      return password.length >= 6 ? "" : "密码长度必须不小于6";
     },
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log(values);
-
           this.$axios
             .post("/login", {
-              "username": values.username,
-              "password": md5(values.password)
+              username: values.username,
+              password: md5(values.password)
             })
-            .then((resp) => {
+            .then(resp => {
               console.log(resp);
               // var data = JSON.parse(resp.data);
               let data = resp.data;
               if (data.result.toLowerCase() == "User Not Found".toLowerCase()) {
                 this.error("用户不存在!");
-              } else if (data.result.toLowerCase() == "Password Error".toLowerCase()) {
+              } else if (
+                data.result.toLowerCase() == "Password Error".toLowerCase()
+              ) {
                 this.error("密码错误!");
               } else {
-                this.$router.push({
-                  path: "/main",
-                  query: { user: values.username, role : data.result }
-                });
+                if (data.first == "true") {
+                  this.$router.push({
+                    path: "/reset_pass",
+                    query: { user: values.username, role: data.result }
+                  });
+                } else {
+                  this.$router.push({
+                    path: "/main",
+                    query: { user: values.username, role: data.result }
+                  });
+                }
               }
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err);
               this.error("登录失败!");
             });
         } else {
-          this.error("Error Parameter!");
+          this.error("输入参数错误！");
         }
       });
     },
 
     error(msg) {
       Modal.error({
-        title: "Error",
+        title: "提示：",
         content: msg
       });
     }
