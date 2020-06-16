@@ -71,6 +71,9 @@ export default {
     this.$nextTick(() => {
       // To disabled submit button at the beginning.
       this.form.validateFields();
+      if (this.$route.query.user) {
+        this.form.setFieldsValue({username : this.$route.query.user})
+      }
     });
   },
   methods: {

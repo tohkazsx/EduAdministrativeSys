@@ -13,7 +13,8 @@ CREATE TABLE `user_login` (
     `user_no` VARCHAR(16) NOT NULL COMMENT '用户账号(stu_no/teach_no/admin_no)',
     `user_pass` VARCHAR(64) NOT NULL COMMENT '用户密码',
     `user_type` CHAR(8) NOT NULL COMMENT '用户账号类型',
-    `user_first` CHAR(5) NOT NULL COMMENT '用户是否第一次登录(true/false)'
+    `user_first` CHAR(5) NOT NULL COMMENT '用户是否第一次登录(true/false)',
+    PRIMARY KEY (`user_no`)
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT='用户登录信息';
 
 DROP TABLE IF EXISTS `student`;
@@ -144,6 +145,17 @@ BEGIN
             SELECT u_type as result, u_first as first;
         end if;
     end if;
+END $
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS `reset_password_proc`;
+DELIMITER $
+CREATE PROCEDURE `reset_password_proc` (
+    IN user VARCHAR(16),
+    IN pass VARCHAR(64)
+)
+BEGIN
+    UPDATE `user_login` SET `user_pass`=pass,`user_first`='false' WHERE `user_no`=user;
 END $
 DELIMITER ;
 
