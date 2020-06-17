@@ -2,68 +2,77 @@
   <a-row align="middle" class="to-center">
     <a-col :span="8" :offset="8">
       <a-form layout="horizontal" :form="form" @submit="handleSubmit">
-        <a-form-item>
-          <h1 class="centent-center">重置密码</h1>
-        </a-form-item>
+        <a-card style="background-color: rgba(255,255,255,0.1);">
+          <a-layout>
+            <a-layout-header style="background-color: #3C7ACF">
+              <h1 class="centent-center">重置密码</h1>
+            </a-layout-header>
 
-        <a-form-item
-          :validate-status="userNameError() ? 'error' : ''"
-          :help="userNameError() || ''"
-        >
-          <a-input
-            size="large"
-            disabled
-            v-decorator="[
+            <a-layout-header style="background-color: #3C7ACF">
+              <a-form-item
+                :validate-status="userNameError() ? 'error' : ''"
+                :help="userNameError() || ''"
+              >
+                <a-input
+                  size="large"
+                  disabled
+                  v-decorator="[
           'username',
         ]"
-            placeholder="用户名"
-          >
-            <a-icon slot="prefix" type="user" style="color:rgba(0,0,0,.25)" />
-          </a-input>
-        </a-form-item>
+                  placeholder="用户名"
+                >
+                  <a-icon slot="prefix" type="user" style="color:rgba(0,0,0,.25)" />
+                </a-input>
+              </a-form-item>
+            </a-layout-header>
 
-        <a-form-item
-          :validate-status="passwordError() ? 'error' : ''"
-          :help="passwordError() || ''"
-        >
-          <a-input
-            size="large"
-            v-decorator="[
+            <a-layout-header style="background-color: #3C7ACF">
+              <a-form-item
+                :validate-status="passwordError() ? 'error' : ''"
+                :help="passwordError() || ''"
+              >
+                <a-input
+                  size="large"
+                  v-decorator="[
           'password',
-          { rules: [{ required: true, message: '请输入密码' }] },
+          { rules: [{ required: true, message: '请输入新密码' }] },
         ]"
-            type="password"
-            placeholder="密码"
-          >
-            <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" />
-          </a-input>
-        </a-form-item>
-        <a-form-item
-          :validate-status="confirmPassError() ? 'error' : ''"
-          :help="confirmPassError() || ''"
-        >
-          <a-input
-            size="large"
-            v-decorator="[
+                  type="password"
+                  placeholder="新密码"
+                >
+                  <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" />
+                </a-input>
+              </a-form-item>
+            </a-layout-header>
+            <a-layout-header style="background-color: #3C7ACF">
+              <a-form-item
+                :validate-status="confirmPassError() ? 'error' : ''"
+                :help="confirmPassError() || ''"
+              >
+                <a-input
+                  size="large"
+                  v-decorator="[
           'confirm_pass',
           { rules: [{ required: true, message: '请再次确认密码' }] },
         ]"
-            type="password"
-            placeholder="确认密码"
-          >
-            <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" />
-          </a-input>
-        </a-form-item>
-
-        <a-form-item>
-          <a-row>
-            <a-col :span="4" offset="10">
-              <a-button size="large" type="primary" html-type="submit">
-                确认重置
-              </a-button>
-            </a-col>
-          </a-row>
-        </a-form-item>
+                  type="password"
+                  placeholder="确认密码"
+                >
+                  <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" />
+                </a-input>
+              </a-form-item>
+            </a-layout-header>
+            <a-layout-header style="background-color: #3C7ACF">
+              <a-form-item>
+                <a-row>
+                  <a-col :span="4" offset="10">
+                    <a-button size="large" type="primary" html-type="submit">确认重置</a-button>
+                  </a-col>
+                </a-row>
+              </a-form-item>
+            </a-layout-header>
+          </a-layout>
+        </a-card>
       </a-form>
     </a-col>
   </a-row>
@@ -140,13 +149,13 @@ export default {
               password: md5(values.password)
             })
             .then(responce => {
-              this.onResetSucc()
+              this.onResetSucc();
             })
             .catch(err => {
-              this.error("重置密码失败：" + err)
+              this.error("重置密码失败：" + err);
             });
         } else {
-          this.error("重置密码失败：" + err)
+          this.error("重置密码失败：" + err);
         }
       });
     },

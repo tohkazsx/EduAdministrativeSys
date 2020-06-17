@@ -47,7 +47,7 @@
             <a-layout-header style="background-color: #3C7ACF">
               <a-form-item>
                 <a-row>
-                  <a-col :span="6" offset="9">
+                  <a-col :span="8" offset="8">
                     <a-button
                       block
                       size="large"
@@ -144,6 +144,7 @@
                       query: {user: values.username, role: data.result}
                     })
                   } else {
+                    this.$store.commit('updateName', data.name)
                     this.$router.push({
                       path: "/main",
                       query: {user: values.username, role: data.result}
