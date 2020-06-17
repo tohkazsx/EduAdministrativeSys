@@ -59,7 +59,7 @@
           <a-row>
             <a-col :span="4" offset="10">
               <a-button size="large" type="primary" html-type="submit">
-                <router-link to="/login">确认重置</router-link>
+                确认重置
               </a-button>
             </a-col>
           </a-row>
@@ -158,7 +158,7 @@ export default {
     },
     onResetSucc() {
       let secondsToGo = 3;
-      const modal = this.$success({
+      const modal = Modal.success({
         title: "提示",
         content: `密码修改成功, ${secondsToGo} 秒后跳转到登陆页面`
       });
@@ -173,7 +173,7 @@ export default {
         modal.destroy();
         this.$router.push({
           path: "/login",
-          query: { user: values.username, role: this.$route.query.role }
+          query: { user: this.$route.query.user, role: this.$route.query.role }
         });
       }, secondsToGo * 1000);
     }

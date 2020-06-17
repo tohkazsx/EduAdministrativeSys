@@ -21,12 +21,14 @@ export default new Router({
     {
       path: '/main',
       name: 'main',
-      component: Main
+      component: Main,
+      meta: { requireAuth: true }
     },
     {
       path: '/reset_pass',
       name: 'reset_pass',
-      component: ResetPass
+      component: ResetPass,
+      meta: { requireAuth: true }
     }
   ]
 })

@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="components-layout-top-side" style="height:100%">
+  <a-layout id="components-layout-top-side" style="height:100%;width:100%;position:fixed">
     <a-layout-header class="header">
       <div class="logo"></div>
       <a-menu
@@ -68,7 +68,7 @@ export default {
   data() {
     return {
       collapsed: false
-    };
+    }
   }
 };
 </script>

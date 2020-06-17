@@ -12,7 +12,7 @@ router.post('/', function (req, res, next) {
         }
         // console.log(result);
         // console.log(result[0][0]);
-        console.log(JSON.stringify(result[0][0]));
+        // console.log(JSON.stringify(result[0][0]));
         res.end(JSON.stringify(result[0][0]));
     });
 });

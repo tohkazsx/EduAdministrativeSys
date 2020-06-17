@@ -1,6 +1,6 @@
 <template>
   <a-row align="middle" class="to-center">
-    <a-col :span="8" :offset="8">
+    <a-col :span="6" :offset="9">
       <a-form layout="horizontal" :form="form" @submit="handleSubmit">
         <a-form-item>
           <h1 class="centent-center">账号密码登录</h1>
@@ -38,8 +38,9 @@
         </a-form-item>
         <a-form-item>
           <a-row>
-            <a-col :span="4" offset="10">
+            <a-col :span="6" offset="9">
               <a-button
+                block
                 size="large"
                 type="primary"
                 html-type="submit"
@@ -123,23 +124,24 @@ export default {
               ) {
                 this.error("密码错误!");
               } else {
+                this.$store.commit('updateToken', true)
                 if (data.first == "true") {
                   this.$router.push({
                     path: "/reset_pass",
                     query: { user: values.username, role: data.result }
-                  });
+                  })
                 } else {
                   this.$router.push({
                     path: "/main",
                     query: { user: values.username, role: data.result }
-                  });
+                  })
                 }
               }
             })
             .catch(err => {
               console.log(err);
-              this.error("登录失败!");
-            });
+              this.error("登录失败!")
+            })
         } else {
           this.error("输入参数错误！");
         }
@@ -150,7 +152,7 @@ export default {
       Modal.error({
         title: "提示：",
         content: msg
-      });
+      })
     }
   }
 };

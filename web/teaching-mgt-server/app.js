@@ -31,9 +31,8 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 // routers
-app.user('/resetpass', require('./routes/reset_pass'))
+app.use('/resetpass', require('./routes/reset_pass'))
 app.use('/login', require('./routes/login'))
-app.use('/users', require('./routes/users'))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
