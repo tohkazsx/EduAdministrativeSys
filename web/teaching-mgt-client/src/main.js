@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { DatePicker, Button, Layout, Menu, Breadcrumb, Icon, Form, Input, Row, Col, Radio, Modal } from 'ant-design-vue'
+import { DatePicker, Button, Layout, Menu, Breadcrumb, Icon, Form, Input, Row, Col, Radio, Modal, Tag } from 'ant-design-vue'
 import axios from "axios"
 import store from "./router/store"
 
@@ -14,20 +14,21 @@ Vue.prototype.$axios = axios;
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
-axios.defaults.baseURL = '/api';
+axios.defaults.baseURL = '/api'
 
-Vue.use(DatePicker);
-Vue.use(Button);
-Vue.use(Layout);
-Vue.use(Menu);
-Vue.use(Breadcrumb);
-Vue.use(Icon);
-Vue.use(Form);
-Vue.use(Input);
-Vue.use(Row);
-Vue.use(Col);
-Vue.use(Radio);
-Vue.use(Modal);
+Vue.use(DatePicker)
+Vue.use(Button)
+Vue.use(Layout)
+Vue.use(Menu)
+Vue.use(Breadcrumb)
+Vue.use(Icon)
+Vue.use(Form)
+Vue.use(Input)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Radio)
+Vue.use(Modal)
+Vue.use(Tag)
 
 // 添加路由器拦截
 router.beforeEach(async (to, from, next) => {
