@@ -1,12 +1,12 @@
-### »·¾³×¼±¸
+### ç¯å¢ƒå‡†å¤‡
 
-°²×° `nvm` , Ê¹ÓÃ `nvm` °²×° `nodejs` , ²Ù×÷ÈçÏÂ£º
+å®‰è£… `nvm` , ä½¿ç”¨ `nvm` å®‰è£… `nodejs` , æ“ä½œå¦‚ä¸‹ï¼š
 ```bash
 > $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
 > $ nvm install 13.13.0
 ```
 
-Ê¹ÓÃ `npm` °²×° `yarn` ,`express` ¡¢`vue` , ÃüÁîÈçÏÂ£º
+ä½¿ç”¨ `npm` å®‰è£… `yarn` ,`express` ã€`vue` , å‘½ä»¤å¦‚ä¸‹ï¼š
 
 ```bash
 > $ npm install -g yarn
