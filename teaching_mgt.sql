@@ -245,4 +245,11 @@ END $
 DELIMITER ;
 
 
+INSERT INTO `department` values('9900001','计算机与科学技术系','',0);
+INSERT INTO `department` values('9900002','信息与通信工程系','',0);
+INSERT INTO `department` values('9900003','土木工程材料系','',0);
+INSERT INTO `department` values('9900004','城市工程系','',0);
+
 INSERT INTO `admin` values("1000001", '李华', "18018592020");
+INSERT INTO `student` values("1900001", '小明', '男', '2020-06-01','','');
+INSERT INTO `teacher` values("2200001", '王鹏程', '男', '','13545678951');
