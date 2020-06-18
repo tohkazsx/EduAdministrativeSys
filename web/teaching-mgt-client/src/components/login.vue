@@ -127,7 +127,7 @@
                 password: md5(values.password)
               })
               .then(resp => {
-                console.log(resp);
+                // console.log(resp);
                 // var data = JSON.parse(resp.data);
                 let data = resp.data;
                 if (data.result.toLowerCase() == "User Not Found".toLowerCase()) {

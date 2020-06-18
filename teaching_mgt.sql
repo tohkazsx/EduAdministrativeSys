@@ -206,9 +206,9 @@ CREATE PROCEDURE `get_student_info_proc` (
     IN i_stu_no VARCHAR(16)
 )
 BEGIN
-    SELECT `stu_no`,`stu_name`,`stu_sex`,`stu_enter_date`,`class_name`,`depart_name`
-    FROM `student`,`class`,`department`
-    WHERE `stu_no`=i_stu_no and `stu_class_no`=`class_no` and `stu_depart_no`=`depart_no`;
+    SELECT `stu_no` as userno,`stu_name` as username,`stu_sex` as usersex,DATE_FORMAT(`stu_enter_date`,'%Y-%m-%d') as enter_date,`class_name`,`depart_name` as departname,`teach_name`,`teach_phone`
+    FROM `student`,`class`,`department`,`teacher`
+    WHERE `stu_no`=i_stu_no and `stu_class_no`=`class_no` and `stu_depart_no`=`depart_no` and `class_teach_no`=`teach_no`;
 END $
 DELIMITER ;
 
@@ -218,9 +218,21 @@ CREATE PROCEDURE `get_teacher_info_proc` (
     IN i_teach_no VARCHAR(16)
 )
 BEGIN
-    SELECT `teach_no`,`teach_name`,`teach_sex`,`teach_phone`,`depart_name`
+    SELECT `teach_no` as userno,`teach_name` as username,`teach_sex` as usersex,`teach_phone` as userphone,`depart_name` as departname
     FROM `teacher`,`department`
     WHERE `teach_no`=i_teach_no and `teach_depart_no`=`depart_no`;
+END $
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS `get_admin_info_proc`;
+DELIMITER $
+CREATE PROCEDURE `get_admin_info_proc` (
+    IN i_admin_no VARCHAR(16)
+)
+BEGIN
+    SELECT `admin_no` as userno,`admin_name` as username,`admin_phone` as userphone
+    FROM `admin`
+    WHERE `admin_no`=i_admin_no;
 END $
 DELIMITER ;
 
@@ -250,6 +262,9 @@ INSERT INTO `department` values('9900002','信息与通信工程系','',0);
 INSERT INTO `department` values('9900003','土木工程材料系','',0);
 INSERT INTO `department` values('9900004','城市工程系','',0);
 
+INSERT INTO `class` values('8800001','计算机1班','2019','2200001','9900001',0);
+-- INSERT INTO `class` values('8800002','信息工程2班','2019','2200001','9900002',0);
+
 INSERT INTO `admin` values("1000001", '李华', "18018592020");
-INSERT INTO `student` values("1900001", '小明', '男', '2020-06-01','','');
-INSERT INTO `teacher` values("2200001", '王鹏程', '男', '','13545678951');
+INSERT INTO `student` values("1900001", '小明', '男', '2020-06-01','8800001','9900001');
+INSERT INTO `teacher` values("2200001", '王鹏程', '男', '9900001','13545678951');

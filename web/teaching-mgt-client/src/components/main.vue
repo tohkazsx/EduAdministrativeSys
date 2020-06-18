@@ -3,7 +3,9 @@
     <a-layout-header class="header">
       <a-row>
         <a-col :span="6">
+          <a-button @click="toHomeView" ghost type="link">
           <h1 style="font-size: 28px; font-weight: bolder; color: white">教务管理系统</h1>
+          </a-button>
         </a-col>
         <a-col :span="3" :offset="11">
           <h3 style="color: white">欢迎您，{{ username }} ！</h3>
@@ -29,12 +31,13 @@
     <a-layout>
       <a-layout-sider width="200" class="side-bar">
         <a-menu
+          ref="menuSider"
           theme="dark"
           mode="inline"
           :style="{ height: '100%', borderRight: 0, color: 'white' }"
           @select="itemSelected"
         >
-          <a-sub-menu key="sub1" v-if="userrole != 'student'">
+          <a-sub-menu key="sub2" v-if="userrole != 'student'">
             <span slot="title">
               <a-icon type="usergroup-add" />人员管理
             </span>
@@ -42,22 +45,22 @@
             <a-menu-item key="2" v-if="userrole == 'admin'">教师管理</a-menu-item>
             <a-menu-item key="3" v-if="userrole != 'student'">学生管理</a-menu-item>
           </a-sub-menu>
-          <a-sub-menu key="sub2" v-if="userrole == 'admin'">
+          <a-sub-menu key="sub3" v-if="userrole == 'admin'">
             <span slot="title">
               <a-icon type="solution" />组织管理
             </span>
-            <a-menu-item key="5">系别管理</a-menu-item>
-            <a-menu-item key="6">班级管理</a-menu-item>
+            <a-menu-item key="4">系别管理</a-menu-item>
+            <a-menu-item key="5">班级管理</a-menu-item>
           </a-sub-menu>
-          <a-sub-menu key="sub3">
+          <a-sub-menu key="sub4">
             <span slot="title">
               <a-icon type="profile" />教学信息管理
             </span>
-            <a-menu-item key="9" v-if="userrole == 'admin'">课程管理</a-menu-item>
-            <a-menu-item key="9">学生课程</a-menu-item>
-            <a-menu-item key="9">学生选课</a-menu-item>
-            <a-menu-item key="10">学生成绩</a-menu-item>
-            <a-menu-item key="11" v-if="userrole != 'student'">教师成绩</a-menu-item>
+            <a-menu-item key="6" v-if="userrole == 'admin'">课程管理</a-menu-item>
+            <a-menu-item key="7">学生课程</a-menu-item>
+            <a-menu-item key="8" v-if="userrole == 'student'">学生选课</a-menu-item>
+            <a-menu-item key="9">学生成绩</a-menu-item>
+            <a-menu-item key="10" v-if="userrole != 'student'">教师成绩</a-menu-item>
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
@@ -70,7 +73,7 @@
           :style="{ background: '#fff', padding: '24px', margin: '16px 24px 0 24px', minHeight: '280px' }"
         >
           <keep-alive>
-            <component :is="currentContent"></component>
+            <component :is="currentContent" :userrole="userrole" :userinfo="userinfo"></component>
           </keep-alive>
         </a-layout-content>
         <a-layout-footer style="text-align: center">
@@ -82,12 +85,11 @@
   </a-layout>
 </template>
 <script>
-
-  import initPage from './initPage'
+import initPage from "./initPage";
 
 export default {
   comments: {
-    initPage,
+    initPage
   },
   data() {
     return {
@@ -95,14 +97,36 @@ export default {
       username: this.$store.state.name,
       userno: this.$route.query.user,
       userrole: this.$route.query.role,
+      userinfo: "",
       headerPrompt: "教务管理",
       currentContent: initPage
     };
   },
-  methods : {
+  mounted() {
+    this.getUserInfo();
+  },
+  methods: {
     itemSelected(selected) {
       // console.log(selected)
-      this.header_prompt = selected.item.$el.innerText
+      this.headerPrompt = selected.item.$el.innerText;
+    },
+    getUserInfo() {
+      this.$axios
+        .post("/getuserinfo", {
+          user_no: this.userno,
+          user_role: this.userrole
+        })
+        .then(responce => {
+          this.userinfo = responce.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    toHomeView() {
+      this.$refs.menuSider.setOpenKeys([])
+      this.headerPrompt = "教务管理"
+      this.currentContent = initPage
     }
   }
 };
