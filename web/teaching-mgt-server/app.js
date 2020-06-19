@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/resetpass', require('./routes/reset_pass'))
 app.use('/login', require('./routes/login'))
 app.use('/getuserinfo', require('./routes/get_userinfo'))
+app.use('/getadminsinfo', require('./routes/get_admins'))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

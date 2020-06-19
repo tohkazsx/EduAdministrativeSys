@@ -41,7 +41,7 @@
             <span slot="title">
               <a-icon type="usergroup-add" />人员管理
             </span>
-            <a-menu-item key="1" v-if="userrole == 'admin'">管理员管理</a-menu-item>
+            <a-menu-item key="admin-mgt" v-if="userrole == 'admin'" @select="">管理员管理</a-menu-item>
             <a-menu-item key="2" v-if="userrole == 'admin'">教师管理</a-menu-item>
             <a-menu-item key="3" v-if="userrole != 'student'">学生管理</a-menu-item>
           </a-sub-menu>
@@ -73,7 +73,10 @@
           :style="{ background: '#fff', padding: '24px', margin: '16px 24px 0 24px', minHeight: '280px' }"
         >
           <keep-alive>
-            <component :is="currentContent" :userrole="userrole" :userinfo="userinfo"></component>
+            <init-page v-if="currentContent == 'init-page'" :userrole="userrole" :userinfo="userinfo"></init-page>
+            <admin-mgt v-if="currentContent == 'admin-mgt'" :userrole="userrole" :userinfo="userinfo"></admin-mgt>
+            <student-mgt v-if="currentContent == 'student-mgt'" :userrole="userrole" :userinfo="userinfo"></student-mgt>
+            <teacher-mgt v-if="currentContent == 'teacher-mgt'" :userrole="userrole" :userinfo="userinfo"></teacher-mgt>
           </keep-alive>
         </a-layout-content>
         <a-layout-footer style="text-align: center">
@@ -85,11 +88,22 @@
   </a-layout>
 </template>
 <script>
-import initPage from "./initPage";
+import initPage from "./initPage"
+import adminMgt from "./adminMgt"
+import studentMgt from "./studentMgt"
+import teacherMgt from "./teacherMgt"
+import InitPage from "./initPage";
+import AdminMgt from "./adminMgt";
+import StudentMgt from "./studentMgt";
+import TeacherMgt from "./teacherMgt";
 
 export default {
+  components: {TeacherMgt, StudentMgt, AdminMgt, InitPage},
   comments: {
-    initPage
+    initPage,
+    adminMgt,
+    studentMgt,
+    teacherMgt
   },
   data() {
     return {
@@ -97,9 +111,9 @@ export default {
       username: this.$store.state.name,
       userno: this.$route.query.user,
       userrole: this.$route.query.role,
-      userinfo: "",
+      userinfo: {},
       headerPrompt: "教务管理",
-      currentContent: initPage
+      currentContent: 'init-page'
     };
   },
   mounted() {
@@ -108,7 +122,8 @@ export default {
   methods: {
     itemSelected(selected) {
       // console.log(selected)
-      this.headerPrompt = selected.item.$el.innerText;
+      this.headerPrompt = selected.item.$el.innerText
+      this.currentContent = selected.key
     },
     getUserInfo() {
       this.$axios
@@ -126,7 +141,7 @@ export default {
     toHomeView() {
       this.$refs.menuSider.setOpenKeys([])
       this.headerPrompt = "教务管理"
-      this.currentContent = initPage
+      this.currentContent = "init-page"
     }
   }
 };

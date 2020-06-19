@@ -206,9 +206,9 @@ CREATE PROCEDURE `get_student_info_proc` (
     IN i_stu_no VARCHAR(16)
 )
 BEGIN
-    SELECT `stu_no` as userno,`stu_name` as username,`stu_sex` as usersex,DATE_FORMAT(`stu_enter_date`,'%Y-%m-%d') as enter_date,`class_name`,`depart_name` as departname,`teach_name`,`teach_phone`
+    SELECT `stu_no` as userno,`stu_name` as username,`stu_sex` as usersex,DATE_FORMAT(`stu_enter_date`,'%Y-%m-%d') as enter_date,`class_name`,`teach_name`,`teach_phone`,`depart_name` as departname
     FROM `student`,`class`,`department`,`teacher`
-    WHERE `stu_no`=i_stu_no and `stu_class_no`=`class_no` and `stu_depart_no`=`depart_no` and `class_teach_no`=`teach_no`;
+    WHERE `stu_no` LIKE i_stu_no and `stu_class_no`=`class_no` and `stu_depart_no`=`depart_no` and `class_teach_no`=`teach_no`;
 END $
 DELIMITER ;
 
@@ -220,7 +220,7 @@ CREATE PROCEDURE `get_teacher_info_proc` (
 BEGIN
     SELECT `teach_no` as userno,`teach_name` as username,`teach_sex` as usersex,`teach_phone` as userphone,`depart_name` as departname
     FROM `teacher`,`department`
-    WHERE `teach_no`=i_teach_no and `teach_depart_no`=`depart_no`;
+    WHERE `teach_no` LIKE i_teach_no and `teach_depart_no`=`depart_no`;
 END $
 DELIMITER ;
 
@@ -232,7 +232,7 @@ CREATE PROCEDURE `get_admin_info_proc` (
 BEGIN
     SELECT `admin_no` as userno,`admin_name` as username,`admin_phone` as userphone
     FROM `admin`
-    WHERE `admin_no`=i_admin_no;
+    WHERE `admin_no` LIKE i_admin_no;
 END $
 DELIMITER ;
 
