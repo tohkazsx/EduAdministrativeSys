@@ -4,7 +4,7 @@
       <a-row>
         <a-col :span="6">
           <a-button @click="toHomeView" ghost type="link">
-          <h1 style="font-size: 28px; font-weight: bolder; color: white">教务管理系统</h1>
+            <h1 style="font-size: 28px; font-weight: bolder; color: white">教务管理系统</h1>
           </a-button>
         </a-col>
         <a-col :span="3" :offset="11">
@@ -41,16 +41,16 @@
             <span slot="title">
               <a-icon type="usergroup-add" />人员管理
             </span>
-            <a-menu-item key="admin-mgt" v-if="userrole == 'admin'" @select="">管理员管理</a-menu-item>
-            <a-menu-item key="2" v-if="userrole == 'admin'">教师管理</a-menu-item>
-            <a-menu-item key="3" v-if="userrole != 'student'">学生管理</a-menu-item>
+            <a-menu-item key="admin-mgt" v-if="userrole == 'admin'">管理员管理</a-menu-item>
+            <a-menu-item key="teacher-mgt" v-if="userrole == 'admin'">教师管理</a-menu-item>
+            <a-menu-item key="student-mgt" v-if="userrole != 'student'">学生管理</a-menu-item>
           </a-sub-menu>
           <a-sub-menu key="sub3" v-if="userrole == 'admin'">
             <span slot="title">
               <a-icon type="solution" />组织管理
             </span>
-            <a-menu-item key="4">系别管理</a-menu-item>
-            <a-menu-item key="5">班级管理</a-menu-item>
+            <a-menu-item key="depart-mgt">系别管理</a-menu-item>
+            <a-menu-item key="class-mgt">班级管理</a-menu-item>
           </a-sub-menu>
           <a-sub-menu key="sub4">
             <span slot="title">
@@ -72,12 +72,24 @@
         <a-layout-content
           :style="{ background: '#fff', padding: '24px', margin: '16px 24px 0 24px', minHeight: '280px' }"
         >
-          <keep-alive>
-            <init-page v-if="currentContent == 'init-page'" :userrole="userrole" :userinfo="userinfo"></init-page>
-            <admin-mgt v-if="currentContent == 'admin-mgt'" :userrole="userrole" :userinfo="userinfo"></admin-mgt>
-            <student-mgt v-if="currentContent == 'student-mgt'" :userrole="userrole" :userinfo="userinfo"></student-mgt>
-            <teacher-mgt v-if="currentContent == 'teacher-mgt'" :userrole="userrole" :userinfo="userinfo"></teacher-mgt>
-          </keep-alive>
+          <init-page v-if="currentContent == 'init-page'" :userrole="userrole" :userinfo="userinfo"></init-page>
+          <admin-mgt v-if="currentContent == 'admin-mgt'" :userrole="userrole" :userinfo="userinfo"></admin-mgt>
+          <student-mgt
+            v-if="currentContent == 'student-mgt'"
+            :userrole="userrole"
+            :userinfo="userinfo"
+          ></student-mgt>
+          <teacher-mgt
+            v-if="currentContent == 'teacher-mgt'"
+            :userrole="userrole"
+            :userinfo="userinfo"
+          ></teacher-mgt>
+          <depart-mgt
+            v-if="currentContent == 'depart-mgt'"
+            :userrole="userrole"
+            :userinfo="userinfo"
+          ></depart-mgt>
+          <class-mgt v-if="currentContent == 'class-mgt'" :userrole="userrole" :userinfo="userinfo"></class-mgt>
         </a-layout-content>
         <a-layout-footer style="text-align: center">
           数据库课设 @2020 Create By Aliver. Contact Me
@@ -88,22 +100,21 @@
   </a-layout>
 </template>
 <script>
-import initPage from "./initPage"
-import adminMgt from "./adminMgt"
-import studentMgt from "./studentMgt"
-import teacherMgt from "./teacherMgt"
 import InitPage from "./initPage";
 import AdminMgt from "./adminMgt";
 import StudentMgt from "./studentMgt";
 import TeacherMgt from "./teacherMgt";
+import DepartMgt from "./departMgt";
+import ClassMgt from "./classMgt";
 
 export default {
-  components: {TeacherMgt, StudentMgt, AdminMgt, InitPage},
-  comments: {
-    initPage,
-    adminMgt,
-    studentMgt,
-    teacherMgt
+  components: {
+    TeacherMgt,
+    StudentMgt,
+    AdminMgt,
+    InitPage,
+    DepartMgt,
+    ClassMgt
   },
   data() {
     return {
@@ -113,7 +124,7 @@ export default {
       userrole: this.$route.query.role,
       userinfo: {},
       headerPrompt: "教务管理",
-      currentContent: 'init-page'
+      currentContent: "init-page"
     };
   },
   mounted() {
@@ -122,8 +133,9 @@ export default {
   methods: {
     itemSelected(selected) {
       // console.log(selected)
-      this.headerPrompt = selected.item.$el.innerText
-      this.currentContent = selected.key
+      this.headerPrompt = selected.item.$el.innerText;
+      this.currentContent = selected.key;
+      // console.log(this.currentContent)
     },
     getUserInfo() {
       this.$axios
@@ -139,9 +151,9 @@ export default {
         });
     },
     toHomeView() {
-      this.$refs.menuSider.setOpenKeys([])
-      this.headerPrompt = "教务管理"
-      this.currentContent = "init-page"
+      this.$refs.menuSider.setOpenKeys([]);
+      this.headerPrompt = "教务管理";
+      this.currentContent = "init-page";
     }
   }
 };

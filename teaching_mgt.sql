@@ -257,7 +257,7 @@ END $
 DELIMITER ;
 
 
-INSERT INTO `department` values('9900001','计算机与科学技术系','',0);
+INSERT INTO `department` values('9900001','计算机与科学技术系','2200001',0);
 INSERT INTO `department` values('9900002','信息与通信工程系','',0);
 INSERT INTO `department` values('9900003','土木工程材料系','',0);
 INSERT INTO `department` values('9900004','城市工程系','',0);

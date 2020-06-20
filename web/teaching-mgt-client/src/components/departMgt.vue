@@ -1,7 +1,7 @@
 <template>
-    <a-table :columns="Columns" :data-source="admins_info">
+    <a-table :columns="Columns" :data-source="department_info">
       <template
-        v-for="col in ['userno', 'username', 'userphone']"
+        v-for="col in ['depart_name', 'depart_num', 'teach_name']"
         :slot="col"
         slot-scope="text, record, index"
       >
@@ -34,22 +34,22 @@
 <script>
 const Columns = [
   {
-    title: "工号",
-    dataIndex: "userno",
-    key: "userno",
-    scopedSlots: { customRender: "userno" }
+    title: "系部",
+    dataIndex: "depart_name",
+    key: "depart_name",
+    scopedSlots: { customRender: "depart_name" }
   },
   {
-    title: "姓名",
-    dataIndex: "username",
-    key: "username",
-    scopedSlots: { customRender: "username" }
+    title: "人数",
+    dataIndex: "depart_num",
+    key: "depart_num",
+    scopedSlots: { customRender: "depart_num" }
   },
   {
-    title: "联系方式",
-    dataIndex: "userphone",
-    key: "userphone",
-    scopedSlots: { customRender: "userphone" }
+    title: "系主任",
+    dataIndex: "teach_name",
+    key: "teach_name",
+    scopedSlots: { customRender: "teach_name" }
   },
   {
     title: "编辑",
@@ -59,7 +59,7 @@ const Columns = [
   }
 ];
 export default {
-  name: "adminMgt",
+  name: "departMgt",
   props: {
     userrole: {
       type: String,
@@ -72,65 +72,65 @@ export default {
   },
   data() {
     return {
-      admins_info: [],
+      department_info: [],
       editingKey: "",
       Columns
       // cacheData
     };
   },
   mounted() {
-    this.get_admins_info();
+    this.get_department_info();
   },
   methods: {
-    get_admins_info() {
+    get_department_info() {
       this.$axios
-        .post("/getadminsinfo", {
-          user_no: "%"
+        .post("/getdepartmentinfo", {
+          depart_no: "%"
         })
         .then(responce => {
-          this.admins_info = responce.data;
-          for (let i = 0; i < this.admins_info.length; i += 1) {
-            this.admins_info[i].key = i.toString();
+          this.department_info = responce.data;
+          for (let i = 0; i < this.department_info.length; i += 1) {
+            this.department_info[i].key = i.toString();
           }
-          this.cacheData = this.admins_info.map(item => ({ ...item }));
+          this.cacheData = this.department_info.map(item => ({ ...item }));
         })
         .catch(err => {
           console.log(err);
         });
     },
     handleChange(value, key, column) {
-      const newData = [...this.admins_info];
+      const newData = [...this.department_info];
       const target = newData.filter(item => key === item.key)[0];
       if (target) {
         target[column] = value;
-        this.admins_info = newData;
+        this.department_info = newData;
       }
     },
     edit(key) {
-      const newData = [...this.admins_info];
+      const newData = [...this.department_info];
       const target = newData.filter(item => key === item.key)[0];
       this.editingKey = key;
       if (target) {
         target.editable = true;
-        this.admins_info = newData;
+        this.department_info = newData;
       }
     },
     save(key) {
-      const newData = [...this.admins_info];
+      const newData = [...this.department_info];
       const newCacheData = [...this.cacheData];
       const target = newData.filter(item => key === item.key)[0];
 
       const targetCache = newCacheData.filter(item => key === item.key)[0];
       if (target && targetCache) {
         delete target.editable;
-        this.admins_info = newData;
+        this.department_info = newData;
         Object.assign(targetCache, target);
         this.cacheData = newCacheData;
       }
       this.editingKey = "";
     },
     cancel(key) {
-      const newData = [...this.admins_info];
+      const newData = [...this.department_info];
       const target = newData.filter(item => key === item.key)[0];
       this.editingKey = "";
       if (target) {
@@ -139,7 +139,7 @@ export default {
           this.cacheData.filter(item => key === item.key)[0]
         );
         delete target.editable;
-        this.admins_info = newData;
+        this.department_info = newData;
       }
     }
   }

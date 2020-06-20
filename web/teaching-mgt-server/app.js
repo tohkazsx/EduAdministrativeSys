@@ -35,6 +35,10 @@ app.use('/resetpass', require('./routes/reset_pass'))
 app.use('/login', require('./routes/login'))
 app.use('/getuserinfo', require('./routes/get_userinfo'))
 app.use('/getadminsinfo', require('./routes/get_admins'))
+app.use('/getteachersinfo', require('./routes/get_teachers'))
+app.use('/getstudentsinfo', require('./routes/get_students'))
+app.use('/getdepartmentinfo', require('./routes/get_depart'))
+app.use('/getclassinfo', require('./routes/get_class'))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

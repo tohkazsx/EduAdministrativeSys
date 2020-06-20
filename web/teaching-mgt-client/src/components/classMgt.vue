@@ -1,7 +1,7 @@
 <template>
-    <a-table :columns="Columns" :data-source="admins_info">
+    <a-table :columns="Columns" :data-source="class_info">
       <template
-        v-for="col in ['userno', 'username', 'userphone']"
+        v-for="col in ['userno', 'username', 'usersex', 'userphone', 'departname']"
         :slot="col"
         slot-scope="text, record, index"
       >
@@ -19,7 +19,7 @@
         <div class="editable-row-operations">
           <span v-if="record.editable">
             <a @click="() => save(record.key)">保存</a>
-            <a-popconfirm title="确认取消?" @confirm="() => cancel(record.key)">
+            <a-popconfirm title="Sure to cancel?" @confirm="() => cancel(record.key)">
               <a>取消</a>
             </a-popconfirm>
           </span>
@@ -34,22 +34,34 @@
 <script>
 const Columns = [
   {
-    title: "工号",
-    dataIndex: "userno",
-    key: "userno",
-    scopedSlots: { customRender: "userno" }
+    title: "班级",
+    dataIndex: "class_name",
+    key: "class_name",
+    scopedSlots: { customRender: "class_name" }
   },
   {
-    title: "姓名",
-    dataIndex: "username",
-    key: "username",
-    scopedSlots: { customRender: "username" }
+    title: "班级人数",
+    dataIndex: "class_num",
+    key: "class_num",
+    scopedSlots: { customRender: "class_num" }
   },
   {
-    title: "联系方式",
-    dataIndex: "userphone",
-    key: "userphone",
-    scopedSlots: { customRender: "userphone" }
+    title: "班主任",
+    dataIndex: "teach_name",
+    key: "teach_name",
+    scopedSlots: { customRender: "teach_name" }
+  },
+  {
+    title: "系部",
+    dataIndex: "depart_name",
+    key: "depart_name",
+    scopedSlots: { customRender: "depart_name" }
+  },
+  {
+    title: "年级",
+    dataIndex: "class_term",
+    key: "class_term",
+    scopedSlots: { customRender: "class_term" }
   },
   {
     title: "编辑",
@@ -59,7 +71,7 @@ const Columns = [
   }
 ];
 export default {
-  name: "adminMgt",
+  name: "classMgt",
   props: {
     userrole: {
       type: String,
@@ -72,65 +84,63 @@ export default {
   },
   data() {
     return {
-      admins_info: [],
+      class_info: [],
       editingKey: "",
       Columns
-      // cacheData
     };
   },
   mounted() {
-    this.get_admins_info();
+    this.get_class_info();
   },
   methods: {
-    get_admins_info() {
+    get_class_info() {
       this.$axios
-        .post("/getadminsinfo", {
-          user_no: "%"
+        .post("/getclassinfo", {
+          class_no: "%"
         })
         .then(responce => {
-          this.admins_info = responce.data;
-          for (let i = 0; i < this.admins_info.length; i += 1) {
-            this.admins_info[i].key = i.toString();
+          this.class_info = responce.data;
+          for (let i = 0; i < this.class_info.length; i += 1) {
+            this.class_info[i].key = i.toString();
           }
-          this.cacheData = this.admins_info.map(item => ({ ...item }));
+          this.cacheData = this.class_info.map(item => ({ ...item }));
         })
         .catch(err => {
           console.log(err);
         });
     },
     handleChange(value, key, column) {
-      const newData = [...this.admins_info];
+      const newData = [...this.class_info];
       const target = newData.filter(item => key === item.key)[0];
       if (target) {
         target[column] = value;
-        this.admins_info = newData;
+        this.class_info = newData;
       }
     },
     edit(key) {
-      const newData = [...this.admins_info];
+      const newData = [...this.class_info];
       const target = newData.filter(item => key === item.key)[0];
       this.editingKey = key;
       if (target) {
         target.editable = true;
-        this.admins_info = newData;
+        this.class_info = newData;
       }
     },
     save(key) {
-      const newData = [...this.admins_info];
+      const newData = [...this.class_info];
       const newCacheData = [...this.cacheData];
       const target = newData.filter(item => key === item.key)[0];
-
       const targetCache = newCacheData.filter(item => key === item.key)[0];
       if (target && targetCache) {
         delete target.editable;
-        this.admins_info = newData;
+        this.class_info = newData;
         Object.assign(targetCache, target);
         this.cacheData = newCacheData;
       }
       this.editingKey = "";
     },
     cancel(key) {
-      const newData = [...this.admins_info];
+      const newData = [...this.class_info];
       const target = newData.filter(item => key === item.key)[0];
       this.editingKey = "";
       if (target) {
@@ -139,7 +149,7 @@ export default {
           this.cacheData.filter(item => key === item.key)[0]
         );
         delete target.editable;
-        this.admins_info = newData;
+        this.class_info = newData;
       }
     }
   }
