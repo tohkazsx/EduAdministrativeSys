@@ -56,11 +56,11 @@
             <span slot="title">
               <a-icon type="profile" />教学信息管理
             </span>
-            <a-menu-item key="6" v-if="userrole == 'admin'">课程管理</a-menu-item>
-            <a-menu-item key="7">学生课程</a-menu-item>
-            <a-menu-item key="8" v-if="userrole == 'student'">学生选课</a-menu-item>
-            <a-menu-item key="9">学生成绩</a-menu-item>
-            <a-menu-item key="10" v-if="userrole != 'student'">教师成绩</a-menu-item>
+            <a-menu-item key="course-mgt" v-if="userrole == 'admin'">课程管理</a-menu-item>
+            <a-menu-item key="student-course-mgt">学生课程</a-menu-item>
+            <a-menu-item key="student-select-course" v-if="userrole == 'student'">学生选课</a-menu-item>
+            <a-menu-item key="student-score">学生成绩</a-menu-item>
+            <a-menu-item key="teacher-score" v-if="userrole != 'student'">教师成绩</a-menu-item>
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
@@ -90,6 +90,31 @@
             :userinfo="userinfo"
           ></depart-mgt>
           <class-mgt v-if="currentContent == 'class-mgt'" :userrole="userrole" :userinfo="userinfo"></class-mgt>
+          <course-mgt
+            v-if="currentContent == 'course-mgt'"
+            :userrole="userrole"
+            :userinfo="userinfo"
+          ></course-mgt>
+          <student-course-mgt
+            v-if="currentContent == 'student-course-mgt'"
+            :userrole="userrole"
+            :userinfo="userinfo"
+          ></student-course-mgt>
+          <student-select-course
+            v-if="currentContent == 'student-select-course'"
+            :userrole="userrole"
+            :userinfo="userinfo"
+          ></student-select-course>
+          <student-score
+            v-if="currentContent == 'student-score'"
+            :userrole="userrole"
+            :userinfo="userinfo"
+          ></student-score>
+          <teacher-score
+            v-if="currentContent == 'teacher-score'"
+            :userrole="userrole"
+            :userinfo="userinfo"
+          ></teacher-score>
         </a-layout-content>
         <a-layout-footer style="text-align: center">
           数据库课设 @2020 Create By Aliver. Contact Me
@@ -106,6 +131,11 @@ import StudentMgt from "./studentMgt";
 import TeacherMgt from "./teacherMgt";
 import DepartMgt from "./departMgt";
 import ClassMgt from "./classMgt";
+import CourseMgt from "./courceMgt";
+import StudentCourseMgt from "./studentCourseMgt";
+import StudentScore from "./studentScore";
+import TeacherScore from "./teacherScore";
+import StudentSelectCourse from "./studentSelectCourse";
 
 export default {
   components: {
@@ -114,7 +144,12 @@ export default {
     AdminMgt,
     InitPage,
     DepartMgt,
-    ClassMgt
+    ClassMgt,
+    CourseMgt,
+    StudentCourseMgt,
+    StudentScore,
+    TeacherScore,
+    StudentSelectCourse
   },
   data() {
     return {

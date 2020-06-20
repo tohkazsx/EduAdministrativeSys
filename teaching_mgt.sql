@@ -261,6 +261,10 @@ INSERT INTO `department` values('9900001','计算机与科学技术系','2200001
 INSERT INTO `department` values('9900002','信息与通信工程系','',0);
 INSERT INTO `department` values('9900003','土木工程材料系','',0);
 INSERT INTO `department` values('9900004','城市工程系','',0);
+INSERT INTO `department` values('9900005','化学工程系','',0);
+INSERT INTO `department` values('9900006','工业设计系','',0);
+INSERT INTO `department` values('9900007','天体物理系','',0);
+
 
 INSERT INTO `class` values('8800001','计算机1班','2019','2200001','9900001',0);
 -- INSERT INTO `class` values('8800002','信息工程2班','2019','2200001','9900002',0);
