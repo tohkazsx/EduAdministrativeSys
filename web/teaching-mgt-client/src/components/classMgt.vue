@@ -1,9 +1,9 @@
 <template>
-    <a-table :columns="Columns" :data-source="class_info">
+    <a-table :columns="Columns" :data-source="class_info" :loading="loading">
       <template
         v-for="col in ['userno', 'username', 'usersex', 'userphone', 'departname']"
         :slot="col"
-        slot-scope="text, record, index"
+        slot-scope="text, record"
       >
         <div :key="col">
           <a-input
@@ -15,7 +15,7 @@
           <template v-else>{{ text }}</template>
         </div>
       </template>
-      <template slot="edit" slot-scope="text, record, index">
+      <template slot="edit" slot-scope="text, record">
         <div class="editable-row-operations">
           <span v-if="record.editable">
             <a @click="() => save(record.key)">保存</a>
@@ -86,7 +86,8 @@ export default {
     return {
       class_info: [],
       editingKey: "",
-      Columns
+      Columns,
+      loading : false
     };
   },
   mounted() {
@@ -94,6 +95,7 @@ export default {
   },
   methods: {
     get_class_info() {
+      this.loading = false
       this.$axios
         .post("/getclassinfo", {
           class_no: "%"
@@ -104,6 +106,7 @@ export default {
             this.class_info[i].key = i.toString();
           }
           this.cacheData = this.class_info.map(item => ({ ...item }));
+          this.loading = false;
         })
         .catch(err => {
           console.log(err);

@@ -2,10 +2,10 @@ var express = require('express');
 var router = express.Router();
 var db = require('../utils/mysql-conn')
 
-router.post('/', function (req, res, next) {
+router.post('/', function (req, res) {
     // 调用procedure, 返回结果为数组, 数组元素为数组, 然后才是行数据
     let sql = "call reset_password_proc(?, ?)";
-    db.query(sql, [req.body.username, req.body.password], function (err, result) {
+    db.query(sql, [req.body.username, req.body.password], function (err) {
         if (err) {
             console.log(err.message);
             return;

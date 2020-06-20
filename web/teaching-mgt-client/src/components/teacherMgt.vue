@@ -1,34 +1,34 @@
 <template>
-    <a-table :columns="Columns" :data-source="teachers_info">
-      <template
-        v-for="col in ['userno', 'username', 'usersex', 'userphone', 'departname']"
-        :slot="col"
-        slot-scope="text, record, index"
-      >
-        <div :key="col">
-          <a-input
-            v-if="record.editable"
-            style="margin: -5px 0"
-            :value="text"
-            @change="e => handleChange(e.target.value, record.key, col)"
-          />
-          <template v-else>{{ text }}</template>
-        </div>
-      </template>
-      <template slot="edit" slot-scope="text, record, index">
-        <div class="editable-row-operations">
-          <span v-if="record.editable">
-            <a @click="() => save(record.key)">保存</a>
-            <a-popconfirm title="Sure to cancel?" @confirm="() => cancel(record.key)">
-              <a>取消</a>
-            </a-popconfirm>
-          </span>
-          <span v-else>
-            <a :disabled="editingKey !== ''" @click="() => edit(record.key)">修改</a>
-          </span>
-        </div>
-      </template>
-    </a-table>
+  <a-table :columns="Columns" :data-source="teachers_info" :loading="loading">
+    <template
+      v-for="col in ['userno', 'username', 'usersex', 'userphone', 'departname']"
+      :slot="col"
+      slot-scope="text, record"
+    >
+      <div :key="col">
+        <a-input
+          v-if="record.editable"
+          style="margin: -5px 0"
+          :value="text"
+          @change="e => handleChange(e.target.value, record.key, col)"
+        />
+        <template v-else>{{ text }}</template>
+      </div>
+    </template>
+    <template slot="edit" slot-scope="text, record">
+      <div class="editable-row-operations">
+        <span v-if="record.editable">
+          <a @click="() => save(record.key)">保存</a>
+          <a-popconfirm title="Sure to cancel?" @confirm="() => cancel(record.key)">
+            <a>取消</a>
+          </a-popconfirm>
+        </span>
+        <span v-else>
+          <a :disabled="editingKey !== ''" @click="() => edit(record.key)">修改</a>
+        </span>
+      </div>
+    </template>
+  </a-table>
 </template>
 
 <script>
@@ -86,7 +86,8 @@ export default {
     return {
       teachers_info: [],
       editingKey: "",
-      Columns
+      Columns,
+      loading: false
     };
   },
   mounted() {
@@ -94,6 +95,7 @@ export default {
   },
   methods: {
     get_teachers_info() {
+      this.loading = true;
       this.$axios
         .post("/getteachersinfo", {
           user_no: "%"
@@ -104,6 +106,7 @@ export default {
             this.teachers_info[i].key = i.toString();
           }
           this.cacheData = this.teachers_info.map(item => ({ ...item }));
+          this.loading = false;
         })
         .catch(err => {
           console.log(err);

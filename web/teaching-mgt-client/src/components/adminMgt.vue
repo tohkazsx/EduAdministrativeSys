@@ -1,9 +1,9 @@
 <template>
-    <a-table :columns="Columns" :data-source="admins_info">
+    <a-table :columns="Columns" :data-source="admins_info" :loading="loading">
       <template
         v-for="col in ['userno', 'username', 'userphone']"
         :slot="col"
-        slot-scope="text, record, index"
+        slot-scope="text, record"
       >
         <div :key="col">
           <a-input
@@ -15,7 +15,7 @@
           <template v-else>{{ text }}</template>
         </div>
       </template>
-      <template slot="edit" slot-scope="text, record, index">
+      <template slot="edit" slot-scope="text, record">
         <div class="editable-row-operations">
           <span v-if="record.editable">
             <a @click="() => save(record.key)">保存</a>
@@ -74,8 +74,8 @@ export default {
     return {
       admins_info: [],
       editingKey: "",
-      Columns
-      // cacheData
+      Columns,
+      loading : false
     };
   },
   mounted() {
@@ -83,6 +83,7 @@ export default {
   },
   methods: {
     get_admins_info() {
+      this.loading = true;
       this.$axios
         .post("/getadminsinfo", {
           user_no: "%"
@@ -93,6 +94,7 @@ export default {
             this.admins_info[i].key = i.toString();
           }
           this.cacheData = this.admins_info.map(item => ({ ...item }));
+          this.loading = false;
         })
         .catch(err => {
           console.log(err);
