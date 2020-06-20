@@ -58,7 +58,6 @@
             </span>
             <a-menu-item key="course-mgt" v-if="userrole == 'admin'">课程管理</a-menu-item>
             <a-menu-item key="student-course-mgt">学生课程</a-menu-item>
-            <a-menu-item key="student-select-course" v-if="userrole == 'student'">学生选课</a-menu-item>
             <a-menu-item key="student-score">学生成绩</a-menu-item>
             <a-menu-item key="teacher-score" v-if="userrole != 'student'">教师成绩</a-menu-item>
           </a-sub-menu>
@@ -100,11 +99,6 @@
             :userrole="userrole"
             :userinfo="userinfo"
           ></student-course-mgt>
-          <student-select-course
-            v-if="currentContent == 'student-select-course'"
-            :userrole="userrole"
-            :userinfo="userinfo"
-          ></student-select-course>
           <student-score
             v-if="currentContent == 'student-score'"
             :userrole="userrole"
@@ -135,7 +129,6 @@ import CourseMgt from "./courceMgt";
 import StudentCourseMgt from "./studentCourseMgt";
 import StudentScore from "./studentScore";
 import TeacherScore from "./teacherScore";
-import StudentSelectCourse from "./studentSelectCourse";
 
 export default {
   components: {
@@ -148,8 +141,7 @@ export default {
     CourseMgt,
     StudentCourseMgt,
     StudentScore,
-    TeacherScore,
-    StudentSelectCourse
+    TeacherScore
   },
   data() {
     return {

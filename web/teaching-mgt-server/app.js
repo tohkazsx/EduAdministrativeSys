@@ -39,6 +39,9 @@ app.use('/getteachersinfo', require('./routes/get_teachers'))
 app.use('/getstudentsinfo', require('./routes/get_students'))
 app.use('/getdepartmentinfo', require('./routes/get_depart'))
 app.use('/getclassinfo', require('./routes/get_class'))
+app.use('/getcourse', require('./routes/get_course'))
+app.use('/getstucourse', require('./routes/get_stu_course'))
+app.use('/getteachcourse', require('./routes/get_teach_course'))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

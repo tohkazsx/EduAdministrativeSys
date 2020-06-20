@@ -73,7 +73,7 @@ CREATE TABLE `course` (
     `course_name` VARCHAR(32) NOT NULL COMMENT '课程名',
     `course_teach_no` VARCHAR(16) NOT NULL COMMENT '课程负责老师',
     `course_date` DATETIME NOT NULL COMMENT '课程学年',
-    `course_term` INT NOT NULL COMMENT '课程学期',
+    `course_term` VARCHAR(16) NOT NULL COMMENT '课程学期',
     PRIMARY KEY (`course_no`)
 ) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT '课程信息';
 
@@ -162,6 +162,16 @@ BEGIN
 END $
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `get_course_proc`;
+DELIMITER $
+CREATE PROCEDURE `get_course_proc` ()
+BEGIN
+    SELECT `course_no`,`course_name`,`teach_name`,`course_date`,`course_term`
+    FROM `course`,`teacher`
+    WHERE `course_teach_no`=`teach_no`;
+END $
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS `stu_course_proc`;
 DELIMITER $
 CREATE PROCEDURE `stu_course_proc` (
@@ -196,7 +206,8 @@ CREATE PROCEDURE `teacher_course_score_proc` (
 BEGIN
     SELECT `course_no`,`course_name`,`course_date`,`course_term`,MAX(`sc_socre`) as max_score, MIN(`sc_socre`) as min_score,AVG(`sc_socre`) as avg_score
     FROM `course`,`teacher`,`score`
-    WHERE `course_teach_no`=teacher_no and `teach_no`=teacher_no and `course_no`=`sc_cur_no`;
+    WHERE `course_teach_no`=teacher_no and `teach_no`=teacher_no and `course_no`=`sc_cur_no`
+    GROUP BY `sc_cur_no`;
 END $
 DELIMITER ;
 
@@ -267,7 +278,7 @@ INSERT INTO `department` values('9900007','天体物理系','',0);
 
 
 INSERT INTO `class` values('8800001','计算机1班','2019','2200001','9900001',0);
--- INSERT INTO `class` values('8800002','信息工程2班','2019','2200001','9900002',0);
+INSERT INTO `class` values('8800002','信息工程2班','2019','2200001','9900002',0);
 
 INSERT INTO `admin` values("1000001", '李华', "18018592020");
 INSERT INTO `student` values("1900001", '小明', '男', '2020-06-01','8800001','9900001');

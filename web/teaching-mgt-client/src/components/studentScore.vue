@@ -1,7 +1,7 @@
 <template>
-  <a-table :columns="Columns" :data-source="teachers_info" :loading="loading">
+  <a-table :columns="Columns" :data-source="course_info" :loading="loading">
     <template
-      v-for="col in ['userno', 'username', 'usersex', 'userphone', 'departname']"
+      v-for="col in ['course_no', 'course_name', 'course_date', 'sc_score']"
       :slot="col"
       slot-scope="text, record"
     >
@@ -34,34 +34,28 @@
 <script>
 const Columns = [
   {
-    title: "工号",
-    dataIndex: "userno",
-    key: "userno",
-    scopedSlots: { customRender: "userno" }
+    title: "课号",
+    dataIndex: "course_no",
+    key: "course_no",
+    scopedSlots: { customRender: "course_no" }
   },
   {
-    title: "姓名",
-    dataIndex: "username",
-    key: "username",
-    scopedSlots: { customRender: "username" }
+    title: "课程",
+    dataIndex: "course_name",
+    key: "course_name",
+    scopedSlots: { customRender: "course_name" }
   },
   {
-    title: "性别",
-    dataIndex: "usersex",
-    key: "usersex",
-    scopedSlots: { customRender: "usersex" }
+    title: "课程学期",
+    dataIndex: "course_date",
+    key: "course_date",
+    scopedSlots: { customRender: "course_date" }
   },
   {
-    title: "联系方式",
-    dataIndex: "userphone",
-    key: "userphone",
-    scopedSlots: { customRender: "userphone" }
-  },
-  {
-    title: "院系",
-    dataIndex: "departname",
-    key: "departname",
-    scopedSlots: { customRender: "departname" }
+    title: "分数",
+    dataIndex: "sc_score",
+    key: "sc_score",
+    scopedSlots: { customRender: "sc_score" }
   },
   {
     title: "编辑",
@@ -71,7 +65,7 @@ const Columns = [
   }
 ];
 export default {
-  name: "teacherMgt",
+  name: "studentScore",
   props: {
     userrole: {
       type: String,
@@ -84,28 +78,28 @@ export default {
   },
   data() {
     return {
-      teachers_info: [],
+      course_info: [],
       editingKey: "",
       Columns,
       loading: false
     };
   },
   mounted() {
-    this.get_teachers_info();
+    this.get_course_info();
   },
   methods: {
-    get_teachers_info() {
+    get_course_info() {
       this.loading = true;
       this.$axios
-        .post("/getteachersinfo", {
-          user_no: "%"
+        .post("/getstucourse", {
+          user_no: this.userinfo.userno
         })
         .then(responce => {
-          this.teachers_info = responce.data;
-          for (let i = 0; i < this.teachers_info.length; i += 1) {
-            this.teachers_info[i].key = i.toString();
+          this.course_info = responce.data;
+          for (let i = 0; i < this.course_info.length; i += 1) {
+            this.course_info[i].key = i.toString();
           }
-          this.cacheData = this.teachers_info.map(item => ({ ...item }));
+          this.cacheData = this.course_info.map(item => ({ ...item }));
           this.loading = false;
         })
         .catch(err => {
@@ -113,37 +107,37 @@ export default {
         });
     },
     handleChange(value, key, column) {
-      const newData = [...this.teachers_info];
+      const newData = [...this.course_info];
       const target = newData.filter(item => key === item.key)[0];
       if (target) {
         target[column] = value;
-        this.teachers_info = newData;
+        this.course_info = newData;
       }
     },
     edit(key) {
-      const newData = [...this.teachers_info];
+      const newData = [...this.course_info];
       const target = newData.filter(item => key === item.key)[0];
       this.editingKey = key;
       if (target) {
         target.editable = true;
-        this.teachers_info = newData;
+        this.course_info = newData;
       }
     },
     save(key) {
-      const newData = [...this.teachers_info];
+      const newData = [...this.course_info];
       const newCacheData = [...this.cacheData];
       const target = newData.filter(item => key === item.key)[0];
       const targetCache = newCacheData.filter(item => key === item.key)[0];
       if (target && targetCache) {
         delete target.editable;
-        this.teachers_info = newData;
+        this.course_info = newData;
         Object.assign(targetCache, target);
         this.cacheData = newCacheData;
       }
       this.editingKey = "";
     },
     cancel(key) {
-      const newData = [...this.teachers_info];
+      const newData = [...this.course_info];
       const target = newData.filter(item => key === item.key)[0];
       this.editingKey = "";
       if (target) {
@@ -152,7 +146,7 @@ export default {
           this.cacheData.filter(item => key === item.key)[0]
         );
         delete target.editable;
-        this.teachers_info = newData;
+        this.course_info = newData;
       }
     }
   }
