@@ -42,6 +42,8 @@ app.use('/getclassinfo', require('./routes/get_class'))
 app.use('/getcourse', require('./routes/get_course'))
 app.use('/getstucourse', require('./routes/get_stu_course'))
 app.use('/getteachcourse', require('./routes/get_teach_course'))
+app.use('/addnewadmin', require("./routes/add_admin"))
+app.use('/addnewteacher', require("./routes/add_teacher"))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -49,7 +51,7 @@ app.use(function(req, res, next) {
 })
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}

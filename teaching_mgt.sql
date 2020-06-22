@@ -251,7 +251,7 @@ DROP PROCEDURE IF EXISTS `get_department_info_proc`;
 DELIMITER $
 CREATE PROCEDURE `get_department_info_proc` ()
 BEGIN
-    SELECT `depart_name`,`depart_num`,`teach_name`
+    SELECT  `depart_no`,`depart_name`,`depart_num`,`teach_name`
     FROM `department`,`teacher`
     WHERE `depart_teach_no`=`teach_no`;
 END $
