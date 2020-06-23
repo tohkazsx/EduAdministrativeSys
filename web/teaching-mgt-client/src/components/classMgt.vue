@@ -1,7 +1,7 @@
 <template>
     <a-table :columns="Columns" :data-source="class_info" :loading="loading">
       <template
-        v-for="col in ['userno', 'username', 'usersex', 'userphone', 'departname']"
+        v-for="col in ['class_no','userno', 'username', 'usersex', 'userphone', 'departname']"
         :slot="col"
         slot-scope="text, record"
       >
@@ -33,6 +33,12 @@
 
 <script>
 const Columns = [
+  {
+    title: "编号",
+    dataIndex: "class_no",
+    key: "class_no",
+    scopedSlots: { customRender: "class_no" }
+  },
   {
     title: "班级",
     dataIndex: "class_name",
