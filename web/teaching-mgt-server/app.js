@@ -44,6 +44,7 @@ app.use('/getstucourse', require('./routes/get_stu_course'))
 app.use('/getteachcourse', require('./routes/get_teach_course'))
 app.use('/addnewadmin', require("./routes/add_admin"))
 app.use('/addnewteacher', require("./routes/add_teacher"))
+app.use('/addnewstudent', require("./routes/add_student"))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

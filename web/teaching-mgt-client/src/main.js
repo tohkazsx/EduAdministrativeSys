@@ -16,7 +16,6 @@ Vue.prototype.$axios = axios;
 
 axios.defaults.baseURL = 'http://localhost:3456'
 
-Vue.use(DatePicker)
 Vue.use(Button)
 Vue.use(Layout)
 Vue.use(Menu)
@@ -35,6 +34,7 @@ Vue.use(Descriptions)
 Vue.use(Popconfirm)
 Vue.use(FormModel)
 Vue.use(Select)
+Vue.use(DatePicker)
 
 // 添加路由器拦截
 router.beforeEach(async (to, from, next) => {
