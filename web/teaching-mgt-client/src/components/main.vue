@@ -57,7 +57,7 @@
               <a-icon type="profile" />教学信息管理
             </span>
             <a-menu-item key="course-mgt" v-if="userrole == 'admin'">课程管理</a-menu-item>
-            <a-menu-item key="student-course-mgt">学生课程</a-menu-item>
+            <a-menu-item key="student-course-mgt" v-if="userrole == 'student'">学生课程</a-menu-item>
             <a-menu-item key="student-score">学生成绩</a-menu-item>
             <a-menu-item key="teacher-score" v-if="userrole != 'student'">教师成绩</a-menu-item>
           </a-sub-menu>

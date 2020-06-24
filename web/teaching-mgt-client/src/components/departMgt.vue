@@ -183,10 +183,10 @@ export default {
         })
         .then(responce => {
           this.department_info = responce.data;
-          for (let i = 0; i < this.admins_info.length; i += 1) {
+          for (let i = 0; i < this.department_info.length; i += 1) {
             this.department_info[i].key = i.toString();
           }
-          this.cacheData = this.admins_info.map(item => ({ ...item }));
+          this.cacheData = this.department_info.map(item => ({ ...item }));
           this.data_loading = false;
         })
         .catch(err => {

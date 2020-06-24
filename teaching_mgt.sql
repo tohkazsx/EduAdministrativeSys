@@ -72,7 +72,7 @@ CREATE TABLE `course` (
     `course_no` VARCHAR(16) NOT NULL COMMENT '课程编号',
     `course_name` VARCHAR(32) NOT NULL COMMENT '课程名',
     `course_teach_no` VARCHAR(16) NOT NULL COMMENT '课程负责老师',
-    `course_date` DATETIME NOT NULL COMMENT '课程学年',
+    `course_date` VARCHAR(16) NOT NULL COMMENT '课程学年',
     `course_term` VARCHAR(16) NOT NULL COMMENT '课程学期',
     PRIMARY KEY (`course_no`)
 ) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT '课程信息';
@@ -81,7 +81,7 @@ DROP TABLE IF EXISTS `score`;
 CREATE TABLE `score` (
     `sc_stu_no` VARCHAR(16) NOT NULL COMMENT '学生学号',
     `sc_cur_no` VARCHAR(16) NOT NULL COMMENT '课程编号',
-    `sc_socre`  DECIMAL(2) NOT NULL COMMENT '课程成绩'
+    `sc_socre`  DECIMAL(3) NOT NULL COMMENT '课程成绩'
 ) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT '课程成绩';
 
 -- 触发器定义
@@ -175,13 +175,13 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS `stu_course_proc`;
 DELIMITER $
 CREATE PROCEDURE `stu_course_proc` (
-    IN stu_no VARCHAR(16)
+    IN i_stu_no VARCHAR(16)
 )
 BEGIN
-    SELECT `course_no`,`course_name`,`sc_socre`,`course_date`,`course_term`,`teach_name`,`teach_phone`,`depart_name`
-    FROM `course`,`teacher`,`department`,`score`
+    SELECT `course_no`,`course_name`,`sc_socre`,`course_date`,`course_term`,`teach_name`,`teach_phone`,`depart_name`,`stu_no` as userno,`stu_name` as username
+    FROM `course`,`teacher`,`department`,`score`,`student`
     WHERE `course_teach_no`=`teach_no` and `teach_depart_no`=`depart_no`
-    and `course_no`=`sc_cur_no` and `sc_stu_no`=stu_no;
+    and `course_no`=`sc_cur_no` and `sc_stu_no`=`stu_no` and `sc_stu_no` like i_stu_no;
 END $
 DELIMITER ;
 
@@ -204,9 +204,9 @@ CREATE PROCEDURE `teacher_course_score_proc` (
     IN teacher_no VARCHAR(16)
 )
 BEGIN
-    SELECT `course_no`,`course_name`,`course_date`,`course_term`,MAX(`sc_socre`) as max_score, MIN(`sc_socre`) as min_score,AVG(`sc_socre`) as avg_score
+    SELECT `course_no`,`course_name`,`course_date`,`course_term`,MAX(`sc_socre`) as max_score, MIN(`sc_socre`) as min_score,AVG(`sc_socre`) as avg_score,`teach_no` as userno,`teach_name` as username
     FROM `course`,`teacher`,`score`
-    WHERE `course_teach_no`=teacher_no and `teach_no`=teacher_no and `course_no`=`sc_cur_no`
+    WHERE `course_teach_no` like teacher_no and `teach_no`=`course_teach_no` and `course_no`=`sc_cur_no`
     GROUP BY `sc_cur_no`;
 END $
 DELIMITER ;
@@ -269,12 +269,9 @@ DELIMITER ;
 
 
 INSERT INTO `department` values('9900001','计算机与科学技术系','2200001',0);
-INSERT INTO `department` values('9900002','信息与通信工程系','',0);
-INSERT INTO `department` values('9900003','土木工程材料系','',0);
-INSERT INTO `department` values('9900004','城市工程系','',0);
-INSERT INTO `department` values('9900005','化学工程系','',0);
-INSERT INTO `department` values('9900006','工业设计系','',0);
-INSERT INTO `department` values('9900007','天体物理系','',0);
+INSERT INTO `department` values('9900002','信息与通信工程系','2200003',0);
+INSERT INTO `department` values('9900003','土木工程材料系','2200002',0);
+INSERT INTO `department` values('9900004','城市工程系','2200004',0);
 
 
 INSERT INTO `class` values('8800001','计算机1班','2019','2200001','9900001',0);
@@ -282,4 +279,8 @@ INSERT INTO `class` values('8800002','信息工程2班','2019','2200001','990000
 
 INSERT INTO `admin` values("1000001", '李华', "18018592020");
 INSERT INTO `student` values("1900001", '小明', '男', '2020-06-01','8800001','9900001');
+
 INSERT INTO `teacher` values("2200001", '王鹏程', '男', '9900001','13545678951');
+INSERT INTO `teacher` values("2200002", '罗欣', '女', '9900003','13545667651');
+INSERT INTO `teacher` values("2200003", '马华', '男', '9900002','13545678951');
+INSERT INTO `teacher` values("2200004", '蒋正', '女', '9900004','13545667651');

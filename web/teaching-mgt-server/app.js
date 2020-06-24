@@ -45,6 +45,12 @@ app.use('/getteachcourse', require('./routes/get_teach_course'))
 app.use('/addnewadmin', require("./routes/add_admin"))
 app.use('/addnewteacher', require("./routes/add_teacher"))
 app.use('/addnewstudent', require("./routes/add_student"))
+app.use('/addnewdepart', require('./routes/add_depart'))
+app.use('/addnewclass', require('./routes/add_class'))
+app.use('/addnewcourse', require('./routes/add_course'))
+app.use('/getoptioncourse', require('./routes/get_stuoptioncourse'))
+app.use('/addstucourse', require('./routes/add_stucourse'))
+app.use('/addstuscore', require('./routes/update_stuscore'))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

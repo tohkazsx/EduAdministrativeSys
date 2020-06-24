@@ -1,38 +1,43 @@
 <template>
-  <a-table :columns="Columns" :data-source="course_info" :loading="loading">
-    <template
-      v-for="col in ['course_no', 'course_name', 'course_date', 'sc_score']"
-      :slot="col"
-      slot-scope="text, record"
-    >
-      <div :key="col">
-        <a-input
-          v-if="record.editable"
-          style="margin: -5px 0"
-          :value="text"
-          @change="e => handleChange(e.target.value, record.key, col)"
-        />
-        <template v-else>{{ text }}</template>
-      </div>
-    </template>
-    <template slot="edit" slot-scope="text, record">
-      <div class="editable-row-operations">
-        <span v-if="record.editable">
-          <a @click="() => save(record.key)">保存</a>
-          <a-popconfirm title="Sure to cancel?" @confirm="() => cancel(record.key)">
-            <a>取消</a>
-          </a-popconfirm>
-        </span>
-        <span v-else>
-          <a :disabled="editingKey !== ''" @click="() => edit(record.key)">修改</a>
-        </span>
-      </div>
-    </template>
-  </a-table>
+  <a-row>
+    <a-col>
+      <a-button type="primary" @click="get_teach_cousre_info" :loading="loading">刷新</a-button>
+      <a-table :columns="Columns" :data-source="course_info" :loading="loading" style="margin-top:24px">
+        <template
+          v-for="col in ['userno','username','course_no', 'course_name', 'course_date', 'sc_score']"
+          :slot="col"
+          slot-scope="text, record"
+        >
+          <div :key="col">
+            <a-input
+              v-if="record.editable"
+              style="margin: -5px 0"
+              :value="text"
+              @change="e => handleChange(e.target.value, record.key, col)"
+            />
+            <template v-else>{{ text }}</template>
+          </div>
+        </template>
+      </a-table>
+    </a-col>
+  </a-row>
 </template>
 
 <script>
+import { Modal } from "ant-design-vue";
 const Columns = [
+  {
+    title: "工号",
+    dataIndex: "userno",
+    key: "userno",
+    scopedSlots: { customRender: "userno" }
+  },
+  {
+    title: "姓名",
+    dataIndex: "username",
+    key: "username",
+    scopedSlots: { customRender: "username" }
+  },
   {
     title: "课号",
     dataIndex: "course_no",
@@ -68,12 +73,6 @@ const Columns = [
     dataIndex: "avg_score",
     key: "avg_score",
     scopedSlots: { customRender: "avg_score" }
-  },
-  {
-    title: "编辑",
-    dataIndex: "edit",
-    key: "edit",
-    scopedSlots: { customRender: "edit" }
   }
 ];
 export default {
@@ -104,10 +103,11 @@ export default {
       this.loading = true;
       this.$axios
         .post("/getteachcourse", {
-          user_no: this.userinfo.userno
+          user_no: this.userrole == "admin" ? "%" : this.userinfo.userno
         })
         .then(responce => {
           this.course_info = responce.data;
+          console.log(this.course_info)
           for (let i = 0; i < this.course_info.length; i += 1) {
             this.course_info[i].key = i.toString();
           }
@@ -115,6 +115,7 @@ export default {
           this.loading = false;
         })
         .catch(err => {
+          this.loading = false;
           console.log(err);
         });
     },
