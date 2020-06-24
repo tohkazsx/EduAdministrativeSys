@@ -6,7 +6,7 @@
       title="添加院系"
       :visible="modal.visible"
       :confirm-loading="modal.confirmLoading"
-      @ok="add_new_admin"
+      @ok="add_new_depart"
       @cancel="on_modal_cancel"
       okText="添加"
       cancelText="取消"
@@ -19,14 +19,20 @@
           :label-col="labelCol"
           :wrapper-col="wrapperCol"
         >
-          <a-form-model-item label="工号" prop="user_no">
-            <a-input v-model="form.user_no" />
+          <a-form-model-item label="编号" prop="depart_no">
+            <a-input v-model="form.depart_no" />
           </a-form-model-item>
-          <a-form-model-item label="姓名" prop="user_name">
-            <a-input v-model="form.user_name" />
+          <a-form-model-item label="院系" prop="depart_name">
+            <a-input v-model="form.depart_name" />
           </a-form-model-item>
-          <a-form-model-item label="联系电话" prop="user_phone">
-            <a-input v-model="form.user_phone" />
+          <a-form-model-item label="系主任" prop="teach_no">
+            <a-select v-model="form.teach_no" placeholder="请选择系主任">
+              <a-select-option
+                v-for="teacher in teachers"
+                :key="teacher.userno"
+                :value="teacher.userno"
+              >{{`${teacher.username}(${teacher.userno})`}}</a-select-option>
+            </a-select>
           </a-form-model-item>
         </a-form-model>
       </a-card>
@@ -34,7 +40,12 @@
     <a-col>
       <a-button type="primary" @click="show_modal">添加院系</a-button>
       <a-button type="primary" @click="flush_data" :loading="data_loading">刷新</a-button>
-      <a-table :columns="Columns" :data-source="department_info" :loading="loading">
+      <a-table
+        :columns="Columns"
+        :data-source="department_info"
+        :loading="loading"
+        style="margin-top: 24px"
+      >
         <template
           v-for="col in ['depart_no','depart_name', 'depart_num', 'teach_name']"
           :slot="col"
@@ -119,6 +130,7 @@ export default {
       department_info: [],
       editingKey: "",
       Columns,
+      teachers: [],
       data_loading: false,
       loading: false,
       modal: {
@@ -128,16 +140,94 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
       form: {
-        user_no: "",
-        user_name: "",
-        user_phone: ""
+        depart_no: "",
+        depart_name: "",
+        teach_no: ""
       },
+      rules: {
+        depart_no: [
+          { required: true, message: "请输入院系编号", trigger: "change" },
+        ],
+        depart_name: [
+          { required: true, message: "请输入院系", trigger: "change" },
+        ],
+        teach_no: [
+          { required: true, message: "请输入系主任", trigger: "change" },
+        ],
+      }
     };
   },
   mounted() {
     this.get_department_info();
+    this.get_teachers();
   },
   methods: {
+    get_teachers() {
+      this.$axios
+        .post("/getteachersinfo", {
+          user_no: "%"
+        })
+        .then(responce => {
+          this.teachers = responce.data;
+          // console.log(this.teachers)
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    flush_data() {
+      this.data_loading = true;
+      this.$axios
+        .post("/getdepartmentinfo", {
+          user_no: "%"
+        })
+        .then(responce => {
+          this.department_info = responce.data;
+          for (let i = 0; i < this.admins_info.length; i += 1) {
+            this.department_info[i].key = i.toString();
+          }
+          this.cacheData = this.admins_info.map(item => ({ ...item }));
+          this.data_loading = false;
+        })
+        .catch(err => {
+          this.data_loading = false;
+          console.log(err);
+        });
+    },
+    show_modal() {
+      this.modal.visible = true;
+    },
+    add_new_depart() {
+      console.log(this.form)
+      this.modal.confirmLoading = true;
+      this.$refs.newdepart.validate(valid => {
+        if (valid) {
+          this.$axios
+            .post("/addnewdepart", {
+              depart_no: this.form.depart_no,
+              depart_name: this.form.depart_name,
+              teach_no: this.form.teach_no,
+            })
+            .then(responce => {
+              Modal.success({ title: "提示", content: "新院系添加成功" });
+              this.modal.confirmLoading = false;
+              this.modal.visible = false;
+            })
+            .catch(err => {
+              Modal.error({ title: "提示", content: "新院系添加失败" });
+              this.modal.confirmLoading = false;
+              console.log(err);
+            });
+        } else {
+          this.modal.confirmLoading = false;
+          return false;
+        }
+      });
+    },
+    on_modal_cancel() {
+      this.modal.visible = false;
+      this.$refs.newdepart.resetFields();
+    },
     get_department_info() {
       this.loading = true;
       this.$axios
