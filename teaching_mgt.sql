@@ -178,7 +178,7 @@ CREATE PROCEDURE `stu_course_proc` (
     IN i_stu_no VARCHAR(16)
 )
 BEGIN
-    SELECT `course_no`,`course_name`,`sc_socre`,`course_date`,`course_term`,`teach_name`,`teach_phone`,`depart_name`,`stu_no` as userno,`stu_name` as username
+    SELECT `course_no`,`course_name`,`sc_socre`,`course_date`,`course_term`,`teach_no`,`teach_name`,`teach_phone`,`depart_name`,`stu_no` as userno,`stu_name` as username
     FROM `course`,`teacher`,`department`,`score`,`student`
     WHERE `course_teach_no`=`teach_no` and `teach_depart_no`=`depart_no`
     and `course_no`=`sc_cur_no` and `sc_stu_no`=`stu_no` and `sc_stu_no` like i_stu_no;

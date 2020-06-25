@@ -159,7 +159,11 @@ export default {
         .then(responce => {
           this.course_info = responce.data;
           for (let i = 0; i < this.course_info.length; i += 1) {
-            this.course_info[i].key = i.toString();
+            if (this.userrole == 'teacher' && this.course_info[i].teach_no != this.userinfo.userno) {
+              this.course_info.splice(i, 1);
+            } else {
+              this.course_info[i].key = i.toString();
+            }
           }
           this.cacheData = this.course_info.map(item => ({ ...item }));
           this.data_loading = false;
@@ -226,8 +230,12 @@ export default {
         })
         .then(responce => {
           this.course_info = responce.data;
-          for (let i = 0; i < this.course_info.length; i += 1) {
-            this.course_info[i].key = i.toString();
+          for (let i = this.course_info.length - 1; i >= 0; i -= 1) {
+            if (this.userrole == 'teacher' && this.course_info[i].teach_no != this.userinfo.userno) {
+              this.course_info.splice(i, 1);
+            } else {
+              this.course_info[i].key = i.toString();
+            }
           }
           this.cacheData = this.course_info.map(item => ({ ...item }));
           this.loading = false;
