@@ -14,7 +14,7 @@ Vue.prototype.$axios = axios;
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
-axios.defaults.baseURL = 'http://localhost:3456'
+axios.defaults.baseURL = 'http://47.103.124.94:3456'
 
 Vue.use(Button)
 Vue.use(Layout)
