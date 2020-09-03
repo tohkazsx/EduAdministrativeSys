@@ -8,18 +8,19 @@
   "dependencies": {
     "@types/cookie-parser": "^1.4.2",
     "@types/debug": "^4.1.5",
-    "@types/http-errors": "^1.6.3",
+    "@types/http-errors": "^1.8.0",
     "@types/morgan": "^1.9.0",
-    "@types/mysql": "^2.15.13",
+    "@types/mysql": "^2.15.15",
     "cookie-parser": "^1.4.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "serialize-javascript": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^7.3.0"
+    "eslint": "^7.8.1"
   }
 }
